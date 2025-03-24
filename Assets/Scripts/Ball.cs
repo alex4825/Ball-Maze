@@ -16,6 +16,8 @@ public class Ball : MonoBehaviour
     private Rigidbody _ballRigidbody;
     private Vector3 _forceDirection;
 
+    public int CollectedCoins { get; private set; }
+
     private void Awake()
     {
         _ballRigidbody = GetComponent<Rigidbody>();
@@ -85,4 +87,10 @@ public class Ball : MonoBehaviour
 
     private bool IsMazeCollision(Collision collision)
     => collision.gameObject.GetComponent<Maze>() != null;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        CollectedCoins++;
+        other.gameObject.SetActive(false);
+    }
 }

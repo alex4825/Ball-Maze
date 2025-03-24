@@ -13,21 +13,26 @@ public class Ball : MonoBehaviour
     private bool _isCanMove = false;
     private float _verticalInput;
     private float _horizontalInput;
-    private Rigidbody _ballRigidbody;
+    private Rigidbody _rigidbody;
     private Vector3 _forceDirection;
+
+    public bool IsMovementAllowed { get; set; }
 
     public int CollectedCoins { get; private set; }
 
     private void Awake()
     {
-        _ballRigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        ProcessJumpInput();
+        if (IsMovementAllowed)
+        {
+            ProcessJumpInput();
 
-        ProcessMovementInput();
+            ProcessMovementInput();
+        }
     }
 
     private void ProcessMovementInput()
@@ -65,12 +70,12 @@ public class Ball : MonoBehaviour
     {
         if (_isJumpKeyPressed && _isCanJump)
         {
-            _ballRigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+            _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
             _isJumpKeyPressed = false;
         }
 
         if (_isCanMove)
-            _ballRigidbody.AddForce(_forceDirection * _moveSpeed);
+            _rigidbody.AddForce(_forceDirection * _moveSpeed);
     }
 
     private void OnCollisionEnter(Collision collision)

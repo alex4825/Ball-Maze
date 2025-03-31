@@ -56,7 +56,7 @@ public class TargetFollower : MonoBehaviour
         }
     }
 
-    bool ShouldRotateVertically()
+    private bool ShouldRotateVertically()
     {
         Vector3 vectorToTarget = _trackingTarget.position - transform.position;
         float distanceToTarget = vectorToTarget.magnitude;

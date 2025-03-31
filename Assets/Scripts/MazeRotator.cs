@@ -3,20 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Maze : MonoBehaviour
+public class MazeRotator : MonoBehaviour
 {
     [SerializeField] private float _rotationSpeed = 50;
 
     private float _verticalInput;
     private float _horizontalInput;
-    public bool IsRotationAllowed { get; set; }
 
     private void Update()
     {
-        if (IsRotationAllowed)
-        {
-            ProcessRotation();
-        }
+        ProcessRotation();
+    }
+    public void ToggleMovement(bool isToggleOn)
+    {
+        enabled = isToggleOn;
     }
 
     private void ProcessRotation()

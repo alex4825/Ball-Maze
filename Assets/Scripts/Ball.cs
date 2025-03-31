@@ -4,98 +4,22 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] private float _jumpForce;
-    [SerializeField] private float _moveSpeed;
-    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+    private Mover _moverComponent;
+    private Jumper _jumperComponent;
+    private Wallet _walletComponent;
 
-    private bool _isJumpKeyPressed;
-    private bool _isCanJump = true;
-    private bool _isCanMove = false;
-    private float _verticalInput;
-    private float _horizontalInput;
-    private Rigidbody _rigidbody;
-    private Vector3 _forceDirection;
-
-    public bool IsMovementAllowed { get; set; }
-
-    public int CollectedCoins { get; private set; }
+    public Wallet Wallet => _walletComponent;
 
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        _moverComponent = GetComponent<Mover>();
+        _jumperComponent = GetComponent<Jumper>();
+        _walletComponent = GetComponent<Wallet>();
     }
 
-    private void Update()
+    public void ToggleMovement(bool isToggleOn)
     {
-        if (IsMovementAllowed)
-        {
-            ProcessJumpInput();
-
-            ProcessMovementInput();
-        }
-    }
-
-    private void ProcessMovementInput()
-    {
-        _verticalInput = Input.GetAxisRaw("Vertical");
-        _horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        Vector3 moveDirectionNormalized = new Vector3(_horizontalInput, 0, _verticalInput).normalized;
-        _isCanMove = moveDirectionNormalized.magnitude > 0;
-
-        if (_isCanMove)
-        {
-            Vector3 cameraRightAxis = Camera.main.transform.right;
-            Vector3 cameraForwardFlat = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up).normalized;
-
-            Vector3 forceHorizontalDirection = cameraRightAxis * _horizontalInput;
-            Vector3 forceVerticalDirection = cameraForwardFlat * _verticalInput;
-            _forceDirection = (forceHorizontalDirection + forceVerticalDirection).normalized;
-        }
-    }
-
-    private void ProcessJumpInput()
-    {
-        if (Input.GetKeyDown(_jumpKey))
-        {
-            _isJumpKeyPressed = true;
-        }
-        else if (Input.GetKeyUp(_jumpKey))
-        {
-            _isJumpKeyPressed = false;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (_isJumpKeyPressed && _isCanJump)
-        {
-            _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-            _isJumpKeyPressed = false;
-        }
-
-        if (_isCanMove)
-            _rigidbody.AddForce(_forceDirection * _moveSpeed);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (IsMazeCollision(collision))
-            _isCanJump = true;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (IsMazeCollision(collision))
-            _isCanJump = false;
-    }
-
-    private bool IsMazeCollision(Collision collision)
-    => collision.gameObject.GetComponent<Maze>() != null;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        CollectedCoins++;
-        other.gameObject.SetActive(false);
+        _moverComponent.enabled = isToggleOn;
+        _jumperComponent.enabled = isToggleOn;
     }
 }

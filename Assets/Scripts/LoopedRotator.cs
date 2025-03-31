@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotator : MonoBehaviour
+public class LoopedRotator : MonoBehaviour
 {
     [SerializeField] private float _rotationSpeed = 100;
 
